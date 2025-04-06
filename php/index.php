@@ -6,6 +6,6 @@ require __DIR__ . '/controllers/AlunniController.php';
 
 $app = AppFactory::create();
 
-$app->get('/alunni', "AlunniController:index");
+$app->get('/classi/{classe_id}/alunni', "AlunniController:index");
 
 $app->run();

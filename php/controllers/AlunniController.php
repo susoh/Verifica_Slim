@@ -6,7 +6,7 @@ class AlunniController
 {
   public function index(Request $request, Response $response, $args){
     $mysqli_connection = new MySQLi('my_mariadb', 'root', 'ciccio', 'scuola');
-    $result = $mysqli_connection->query("SELECT * FROM alunni");
+    $result = $mysqli_connection->query("SELECT * FROM alunni where classe_id = " .$args['classe_id'] );
     $results = $result->fetch_all(MYSQLI_ASSOC);
 
     $response->getBody()->write(json_encode($results));
