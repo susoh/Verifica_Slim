@@ -13,10 +13,10 @@ $app->get('/alunni/{classe}/{order_by}', "AlunniController:index");
 //curl -X GET http://localhost:8080/alunni/1
 $app->get('/alunni/{id}', "AlunniController:show");
 
-//curl -X POST http://localhost:8080/alunni -H "Content-Type: application/json" -d '{"Nome": "Marco", "Cognome": "Zini"}'
-$app->post('/alunni', "AlunniController:create");
+//curl -X POST http://localhost:8080/alunni/1 -H "Content-Type: application/json" -d '{"Nome": "matteo", "Cognome": "Ciardi"}'
+$app->post('/alunni/{classe}', "AlunniController:create");
 
-//curl -X PUT http://localhost:8080/alunni/1 -H "Content-Type: application/json" -d '{"nome": "pollo", "cognome": "franco"}'
+//curl -X PUT http://localhost:8080/alunni/1 -H "Content-Type: application/json" -d '{"nome": "matteo", "cognome": "Ciardi"}'
 $app->put('/alunni/{id}', "AlunniController:update");
 
 //curl -X DELETE http://localhost:8080/alunni/1

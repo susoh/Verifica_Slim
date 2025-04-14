@@ -27,7 +27,7 @@ class AlunniController
                                          ON a.classe_id = c.id
                                          WHERE c.id =".$args['classe']."
                                          ORDER BY a.nome $ord");
-    $result = $result->fetch_assoc();
+    $result = $result->fetch_all(MYSQLI_ASSOC);
 
     $response->getBody()->write(json_encode($result));
     return $response->withHeader("Content-type", "application/json")->withStatus(200);
@@ -38,7 +38,8 @@ class AlunniController
 
   public function show(Request $request, Response $response, $args){
     $mysqli_connection = new MySQLi('my_mariadb', 'root', 'ciccio', 'scuola');
-    $result = $mysqli_connection->query("SELECT id, nome, cognome, id_classe FROM alunni WHERE id=" . $args['id']);
+    $sql = "SELECT * FROM alunni WHERE id=" . $args['id'] . ";";
+    $result = $mysqli_connection->query($sql);
     $results = $result->fetch_all(MYSQLI_ASSOC);
 
     $response->getBody()->write(json_encode($results));
@@ -52,11 +53,13 @@ class AlunniController
     $body = json_decode($request->getBody(), true);
     $nome = $mysqli_connection->real_escape_string($body['Nome']);
     $cognome = $mysqli_connection->real_escape_string($body['Cognome']);
+    $c_id = ($args["classe"]);
     if($nome == null || $cognome == null) {
       $response->getBody()->write(json_encode(["error" => "Errore nella creazione dell'alunno, nome o cognome non inseriti"]));
       return $response->withHeader("Content-type", "application/json")->withStatus(500);
     }
-    $result = $mysqli_connection->query("INSERT INTO alunni (nome, cognome) VALUES ('$nome', '$cognome')");
+    $sql = "INSERT INTO alunni (nome, cognome, classe_id) VALUES ('$nome', '$cognome', $c_id)";
+    $result = $mysqli_connection->query($sql);
     
     if ($result) {
         $response->getBody()->write(json_encode(["message" => "Alunno creato correttamente"]));
@@ -66,9 +69,6 @@ class AlunniController
         return $response->withHeader("Content-type", "application/json")->withStatus(500);
     }
   }
-
-
-
 
   public function update(Request $request, Response $response, $args){
     $mysqli_connection = new MySQLi('my_mariadb', 'root', 'ciccio', 'scuola');
