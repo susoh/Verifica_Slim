@@ -1,25 +1,54 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import './TicTacToe.css';
 
-function App() {
+export default function App() {
+  const [showTable, setShowTable] = useState(false);
+
+  const toggleTable = () => {
+    setShowTable(!showTable);
+  };
+
+  const alunni = [
+    {
+      "nome": "Ivan",
+      "cognome": "Bruno",
+      "classe_id": "1"
+    },
+    {
+      "nome": "Claudio",
+      "cognome": "Benve",
+      "classe_id": "1"
+    },
+    {
+        "nome": "Matteo",
+        "cognome": "Ciardi",
+        "classe_id": "2"
+      }
+  ];
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={toggleTable}>Show/Hide Alunni Table</button>
+      {showTable && (
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Cognome</th>
+              <th>Classe ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            {alunni.map((alunno, index) => (
+              <tr key={index}>
+                <td>{alunno.nome}</td>
+                <td>{alunno.cognome}</td>
+                <td>{alunno.classe_id}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
-
-export default App;
