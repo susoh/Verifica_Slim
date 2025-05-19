@@ -51,14 +51,17 @@ class AlunniController
   public function create(Request $request, Response $response, $args) {
     $mysqli_connection = new MySQLi('my_mariadb', 'root', 'ciccio', 'scuola');
     $body = json_decode($request->getBody(), true);
-    $nome = $mysqli_connection->real_escape_string($body['Nome']);
-    $cognome = $mysqli_connection->real_escape_string($body['Cognome']);
-    $c_id = ($args["classe"]);
-    if($nome == null || $cognome == null) {
-      $response->getBody()->write(json_encode(["error" => "Errore nella creazione dell'alunno, nome o cognome non inseriti"]));
-      return $response->withHeader("Content-type", "application/json")->withStatus(500);
+    $nome = $mysqli_connection->real_escape_string($body['nome']);
+    $cognome = $mysqli_connection->real_escape_string($body['cognome']);
+    
+    // Verifica se i campi sono validi
+    if (empty($nome) || empty($cognome)) {
+        $response->getBody()->write(json_encode(["error" => "Nome e cognome sono obbligatori"]));
+        return $response->withHeader("Content-type", "application/json")->withStatus(400);
     }
-    $sql = "INSERT INTO alunni (nome, cognome, classe_id) VALUES ('$nome', '$cognome', $c_id)";
+
+    // Inserisce l'alunno
+    $sql = "INSERT INTO alunni (nome, cognome) VALUES ('$nome', '$cognome')";
     $result = $mysqli_connection->query($sql);
     
     if ($result) {
@@ -68,18 +71,24 @@ class AlunniController
         $response->getBody()->write(json_encode(["error" => "Errore nella creazione dell'alunno"]));
         return $response->withHeader("Content-type", "application/json")->withStatus(500);
     }
-  }
+}
 
-  public function update(Request $request, Response $response, $args){
+
+  public function update(Request $request, Response $response, $args) {
     $mysqli_connection = new MySQLi('my_mariadb', 'root', 'ciccio', 'scuola');
     $body = json_decode($request->getBody(), true);
     $nome = $mysqli_connection->real_escape_string($body['nome']);
     $cognome = $mysqli_connection->real_escape_string($body['cognome']);
-    if($nome == null || $cognome == null) {
-      $response->getBody()->write(json_encode(["error" => "Errore nell'aggiornamento dell'alunno, nome o cognome non inseriti"]));
-      return $response->withHeader("Content-type", "application/json")->withStatus(500);
+    
+    // Verifica se i campi sono validi
+    if (empty($nome) || empty($cognome)) {
+        $response->getBody()->write(json_encode(["error" => "Nome e cognome sono obbligatori"]));
+        return $response->withHeader("Content-type", "application/json")->withStatus(400);
     }
-    $result = $mysqli_connection->query("UPDATE alunni SET nome = '$nome', cognome = '$cognome' WHERE id =".$args['id']); 
+    
+    // Aggiorna l'alunno
+    $sql = "UPDATE alunni SET nome = '$nome', cognome = '$cognome' WHERE id = " . $args['id'];
+    $result = $mysqli_connection->query($sql);
 
     if ($mysqli_connection->affected_rows > 0) {
         $response->getBody()->write(json_encode(["message" => "Alunno aggiornato correttamente"]));
@@ -88,14 +97,17 @@ class AlunniController
         $response->getBody()->write(json_encode(["error" => "Errore nell'aggiornamento dell'alunno"]));
         return $response->withHeader("Content-type", "application/json")->withStatus(400);
     }
-  }
+}
 
 
 
   
-  public function delete(Request $request, Response $response, $args){
+  public function delete(Request $request, Response $response, $args) {
     $mysqli_connection = new MySQLi('my_mariadb', 'root', 'ciccio', 'scuola');
-    $result = $mysqli_connection->query("DELETE FROM alunni WHERE id =".$args['id']);
+    
+    // Elimina l'alunno tramite ID
+    $sql = "DELETE FROM alunni WHERE id = " . $args['id'];
+    $result = $mysqli_connection->query($sql);
 
     if ($mysqli_connection->affected_rows > 0) {
         $response->getBody()->write(json_encode(["message" => "Alunno eliminato correttamente"]));
@@ -104,7 +116,8 @@ class AlunniController
         $response->getBody()->write(json_encode(["error" => "Errore nell'eliminazione dell'alunno"]));
         return $response->withHeader("Content-type", "application/json")->withStatus(400);
     }
-  }
+}
+
 
 
   

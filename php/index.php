@@ -14,18 +14,19 @@ $app->get('/alunni/{classe}/{order_by}', "AlunniController:index");
 $app->get('/alunni/{id}', "AlunniController:show");
 
 //curl -X POST http://localhost:8080/alunni/1 -H "Content-Type: application/json" -d '{"Nome": "matteo", "Cognome": "Ciardi"}'
+// Crea un nuovo alunno
 $app->post('/alunni/{classe}', "AlunniController:create");
 
-//curl -X PUT http://localhost:8080/alunni/1 -H "Content-Type: application/json" -d '{"nome": "matteo", "cognome": "Ciardi"}'
+// Aggiorna un alunno esistente
 $app->put('/alunni/{id}', "AlunniController:update");
 
-//curl -X DELETE http://localhost:8080/alunni/1
+// Elimina un alunno
 $app->delete('/alunni/{id}', "AlunniController:delete");
 
 //Ora ci sono le rotte per le classi
 
 //curl -X GET http://localhost:8080/classi
-$app->get('/classi', "ClassiController:index");
+$app->get('/classi', "ClassiController:index"); 
 
 //curl -X GET http://localhost:8080/classi/1
 $app->get('/classi/{id}', "ClassiController:show");
